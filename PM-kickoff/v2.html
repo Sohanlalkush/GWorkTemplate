@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Genedrift | Acme Pharma Kick-Off Meeting</title>
+    <style>
+        :root {
+            --bg-main: #f8fafc;
+            --bg-card: rgba(255, 255, 255, 0.85);
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --teal: #008b80;
+            --teal-light: #e6f7f6;
+            --teal-glow: rgba(0, 139, 128, 0.15);
+            --gold: #b48924;
+            --gold-light: #fef8eb;
+            --border: rgba(0, 139, 128, 0.15);
+            --shadow: 0 10px 30px -10px rgba(0, 139, 128, 0.1);
+            --glass-popup: rgba(255, 255, 255, 0.75);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Calibri', 'Carlito', 'Segoe UI', sans-serif;
+            font-size: 18px;
+            background: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .bg-mesh {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background:
+                radial-gradient(circle at 10% 20%, rgba(0, 180, 166, 0.06) 0%, transparent 45%),
+                radial-gradient(circle at 90% 80%, rgba(232, 184, 75, 0.05) 0%, transparent 50%),
+                linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 90px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+        }
+
+        .logo img {
+            height: 48px;
+        }
+        .logo-fallback {
+            font-size: 26px;
+            color: var(--teal);
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .header-center {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 40px;
+        }
+        .progress-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .progress-bar {
+            flex: 1;
+            height: 7px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 12.5%;
+            background: linear-gradient(90deg, var(--teal), var(--gold));
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .progress-text {
+            font-family: 'Calibri', 'Carlito', monospace;
+            font-size: 14px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            font-weight: bold;
+        }
+
+        .header-right {
+            text-align: right;
+        }
+        .header-client {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+        .header-meta {
+            font-size: 13px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 2px;
+            font-weight: 600;
+        }
+
+        .slide-container {
+            position: relative;
+            z-index: 10;
+            height: calc(100vh - 125px);
+            margin-top: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 40px;
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            max-width: 1160px;
+            max-height: 100%;
+            animation: slideFadeIn 0.5s cubic-bezier(0.25, 1, 0.5, 1) both;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes slideFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px) scale(0.99);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .eyebrow {
+            display: inline-block;
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--teal);
+            background: var(--teal-light);
+            border: 1px solid rgba(0, 139, 128, 0.2);
+            padding: 6px 14px;
+            border-radius: 20px;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+        h1 {
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--text-main);
+            margin-bottom: 16px;
+        }
+        h1 span {
+            color: var(--teal);
+        }
+        h2 {
+            font-size: 34px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 10px;
+        }
+        .slide-sub {
+            font-size: 18px;
+            color: var(--text-muted);
+            margin-bottom: 28px;
+            max-width: 800px;
+            line-height: 1.6;
+        }
+
+        /* TIMELINE / AGENDA LIST */
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            max-width: 950px;
+        }
+        .tl-item {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px 24px;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: all 0.25s;
+        }
+        .tl-item:hover {
+            border-color: var(--teal);
+            transform: translateX(5px);
+            background: var(--teal-light);
+        }
+        .tl-number {
+            width: 38px;
+            height: 38px;
+            background: var(--teal);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        .tl-content {
+            flex: 1;
+        }
+        .tl-content h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+        .tl-content p {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+        .tl-badge {
+            font-size: 13px;
+            color: var(--teal);
+            background: var(--teal-light);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+
+        /* CARDS & GRIDS */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+            gap: 20px;
+            margin-bottom: 10px;
+        }
+        .card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 26px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .card:hover {
+            border-color: var(--teal);
+            transform: translateY(-4px);
+            box-shadow: 0 16px 32px rgba(0, 139, 128, 0.08);
+            background: linear-gradient(to bottom right, #ffffff, var(--teal-light));
+        }
+        .card::after {
+            content: 'Click to Expand ↗';
+            position: absolute;
+            bottom: 12px;
+            right: 16px;
+            font-size: 11px;
+            color: var(--teal);
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.25s;
+        }
+        .card:hover::after {
+            opacity: 1;
+        }
+        .card .icon {
+            font-size: 28px;
+            margin-bottom: 14px;
+            display: block;
+        }
+        .card h3 {
+            font-size: 21px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+        .card p {
+            font-size: 15.5px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .card .email-tag {
+            font-size: 13px;
+            color: var(--gold);
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+
+        /* PRODUCTS TABLE */
+        .table-container {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+        th {
+            background: var(--teal-light);
+            color: var(--teal);
+            font-weight: 700;
+            font-size: 16px;
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--border);
+        }
+        td {
+            padding: 20px 24px;
+            font-size: 16px;
+            color: var(--text-main);
+            border-bottom: 1px solid #f1f5f9;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        tr:hover td {
+            background-color: rgba(0, 139, 128, 0.02);
+        }
+        .table-badge {
+            font-size: 13px;
+            color: var(--gold);
+            background: var(--gold-light);
+            border: 1px solid rgba(180, 137, 36, 0.2);
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-weight: 700;
+        }
+
+        /* HIGHLIGHT BANNER */
+        .highlight-banner {
+            background: linear-gradient(90deg, var(--teal-light), var(--gold-light));
+            border-left: 5px solid var(--teal);
+            padding: 20px 24px;
+            border-radius: 0 12px 12px 0;
+            margin-top: 24px;
+            font-size: 16.5px;
+            line-height: 1.6;
+        }
+
+        /* WORKFLOW IMAGE CONTAINER */
+        .iframe-container {
+            width: 100%;
+            height: 500px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .workflow-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            padding: 20px;
+        }
+
+        /* NAVIGATION CONTROLS */
+        .nav-arrows {
+            position: fixed;
+            bottom: 25px;
+            right: 40px;
+            display: flex;
+            gap: 10px;
+            z-index: 101;
+        }
+        .nav-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: white;
+            color: var(--teal);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: var(--shadow);
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .nav-btn:hover {
+            background: var(--teal);
+            color: white;
+            border-color: var(--teal);
+            transform: scale(1.05);
+        }
+        .keyboard-hint {
+            position: fixed;
+            bottom: 36px;
+            right: 155px;
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: bold;
+            z-index: 101;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.15);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.open {
+            display: flex;
+            opacity: 1;
+        }
+        .modal-card {
+            background: var(--glass-popup);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 650px;
+            max-height: 80vh;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            animation: modalPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+        @keyframes modalPop {
+            from {
+                transform: scale(0.92) translateY(15px);
+            }
+            to {
+                transform: scale(1) translateY(0);
+            }
+        }
+        .modal-header {
+            padding: 24px 28px 16px;
+            border-bottom: 1px solid rgba(0, 139, 128, 0.1);
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+        .modal-title h3 {
+            font-size: 26px;
+            color: var(--text-main);
+            font-weight: 700;
+        }
+        .modal-close {
+            background: #e2e8f0;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text-muted);
+            transition: background 0.2s;
+        }
+        .modal-close:hover {
+            background: #cbd5e1;
+            color: var(--text-main);
+        }
+        .modal-body {
+            padding: 28px;
+            overflow-y: auto;
+            line-height: 1.6;
+            font-size: 17.5px;
+            color: var(--text-muted);
+        }
+        .pop-meta-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            padding-top: 16px;
+        }
+        .pop-chip {
+            font-size: 13px;
+            background: rgba(0, 139, 128, 0.08);
+            color: var(--teal);
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 35px;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            z-index: 99;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            font-size: 12px;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        footer a {
+            color: var(--teal);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            header {
+                padding: 0 16px;
+                height: 70px;
+            }
+            .logo img {
+                height: 32px;
+            }
+            .header-center {
+                margin: 0 12px;
+            }
+            .header-client {
+                font-size: 14px;
+            }
+            .header-meta {
+                font-size: 10px;
+            }
+            .slide-container {
+                padding: 12px 16px;
+                margin-top: 70px;
+                height: calc(100vh - 105px);
+            }
+            h1 {
+                font-size: 32px;
+            }
+            h2 {
+                font-size: 24px;
+            }
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            .nav-arrows {
+                right: 16px;
+                bottom: 45px;
+            }
+            .keyboard-hint {
+                display: none;
+            }
+            footer {
+                padding: 0 16px;
+                font-size: 10px;
+                height: 30px;
+            }
+            .progress-text {
+                font-size: 11px;
+            }
+            .slide-sub {
+                font-size: 16px;
+            }
+            .tl-item {
+                padding: 12px 16px;
+                gap: 14px;
+            }
+            .tl-content h3 {
+                font-size: 17px;
+            }
+            .tl-content p {
+                font-size: 13px;
+            }
+            th,
+            td {
+                padding: 12px 14px;
+                font-size: 14px;
+            }
+            .iframe-container {
+                height: 280px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 0 10px;
+                height: 60px;
+            }
+            .logo img {
+                height: 26px;
+            }
+            .header-center {
+                margin: 0 8px;
+            }
+            .header-client {
+                font-size: 12px;
+            }
+            .header-meta {
+                font-size: 9px;
+            }
+            .slide-container {
+                padding: 8px 10px;
+                margin-top: 60px;
+                height: calc(100vh - 90px);
+            }
+            h1 {
+                font-size: 26px;
+            }
+            h2 {
+                font-size: 20px;
+            }
+            .card {
+                padding: 18px;
+            }
+            .card h3 {
+                font-size: 18px;
+            }
+            .card p {
+                font-size: 14px;
+            }
+            .tl-number {
+                width: 30px;
+                height: 30px;
+                font-size: 13px;
+            }
+            .nav-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+            }
+            .nav-arrows {
+                bottom: 38px;
+                right: 10px;
+                gap: 6px;
+            }
+            footer {
+                padding: 0 10px;
+                font-size: 9px;
+                height: 26px;
+            }
+            .progress-text {
+                font-size: 10px;
+            }
+            .eyebrow {
+                font-size: 11px;
+                padding: 4px 10px;
+            }
+            .slide-sub {
+                font-size: 14px;
+                margin-bottom: 18px;
+            }
+            .highlight-banner {
+                padding: 14px 16px;
+                font-size: 14px;
+            }
+            .table-container {
+                margin-top: 12px;
+            }
+            th,
+            td {
+                padding: 10px 12px;
+                font-size: 12px;
+            }
+            .iframe-container {
+                height: 200px;
+            }
+            .modal-card {
+                width: 95%;
+                max-height: 90vh;
+            }
+            .modal-header {
+                padding: 16px 18px 12px;
+            }
+            .modal-title h3 {
+                font-size: 20px;
+            }
+            .modal-body {
+                padding: 18px;
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-mesh"></div>
+
+    <header>
+        <div class="logo">
+            <img src="https://download-accl.zoho.com/public/workdrive/download/ohu70626031bf130c4fde99853633332c8147" alt="Genedrift Logo" onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'logo-fallback\'>GENEDRIFT</div>'" />
+        </div>
+        <div class="header-center">
+            <div class="progress-container">
+                <div class="progress-text" id="progress-label">Kick-Off Meeting</div>
+                <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+                <div class="progress-text" id="progress-step">1 / 9</div>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="header-client">Genedrift × Acme Pharmaceuticals</div>
+            <div class="header-meta">India GMP &amp; Registration — 20 June 2026</div>
+        </div>
+    </header>
+
+    <div class="slide-container">
+
+        <!-- SLIDE 1: COVER -->
+        <div class="slide active" id="slide-0" data-title="Kick-Off Meeting">
+            <div class="eyebrow">Project Initiation</div>
+            <h1>GMP Site Clearance &amp; <span>Product Registration</span></h1>
+            <p class="slide-sub">
+                A formal kick-off meeting to align on objectives, governance, and operational workflows
+                for the India market entry program.
+            </p>
+            <div class="highlight-banner" style="max-width: 700px;">
+                <strong>Meeting Details</strong><br />
+                <strong>Host:</strong> Genedrift &nbsp;|&nbsp; <strong>Client:</strong> Acme Pharmaceuticals Pvt. Ltd.<br />
+                <strong>Date:</strong> 20 June 2026 &nbsp;|&nbsp; <strong>Project:</strong> GMP Site Clearance &amp; Product Registration – India
+            </div>
+        </div>
+
+        <!-- SLIDE 2: AGENDA -->
+        <div class="slide" id="slide-1" data-title="Agenda">
+            <div class="eyebrow">Meeting Directory</div>
+            <h2>Session Agenda</h2>
+            <p class="slide-sub">A structured walkthrough of today's discussion points.</p>
+
+            <div class="timeline">
+                <div class="tl-item" onclick="moveSlide(2)">
+                    <div class="tl-number">1</div>
+                    <div class="tl-content">
+                        <h3>Definitions Framework</h3>
+                        <p>Key roles and stakeholder accountability structures.</p>
+                    </div>
+                    <span class="tl-badge">Slide 3</span>
+                </div>
+                <div class="tl-item" onclick="moveSlide(3)">
+                    <div class="tl-number">2</div>
+                    <div class="tl-content">
+                        <h3>Roles &amp; Responsibilities</h3>
+                        <p>PM / Delivery Owner mandates and communication protocols.</p>
+                    </div>
+                    <span class="tl-badge">Slide 4</span>
+                </div>
+                <div class="tl-item" onclick="moveSlide(4)">
+                    <div class="tl-number">3</div>
+                    <div class="tl-content">
+                        <h3>Team Contacts</h3>
+                        <p>Assigned personnel, emails, and escalation paths.</p>
+                    </div>
+                    <span class="tl-badge">Slide 5</span>
+                </div>
+                <div class="tl-item" onclick="moveSlide(5)">
+                    <div class="tl-number">4</div>
+                    <div class="tl-content">
+                        <h3>Product / GMP Scope</h3>
+                        <p>Target projects, reference numbers, and country.</p>
+                    </div>
+                    <span class="tl-badge">Slide 6-7</span>
+                </div>
+                <div class="tl-item" onclick="moveSlide(7)">
+                    <div class="tl-number">5</div>
+                    <div class="tl-content">
+                        <h3>Workflow Overview</h3>
+                        <p>End-to-end process mapping and handoffs.</p>
+                    </div>
+                    <span class="tl-badge">Slide 8</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: DEFINITIONS -->
+        <div class="slide" id="slide-2" data-title="Definitions">
+            <div class="eyebrow">Governance Definitions</div>
+            <h2>Functional Team Roles</h2>
+            <p class="slide-sub">Clear definitions to ensure alignment across all workstreams.</p>
+
+            <div class="cards-grid">
+                <div class="card" onclick="openModalFromCard(this, 'Scope: Coordination', 'Focus: Client Interface')">
+                    <span class="icon">💼</span>
+                    <h3>Project Manager</h3>
+                    <p>Responsible for facilitating communication and coordination between the client and the project team. Ensures seamless information flow, addresses inquiries, and manages key interactions to keep the project aligned with objectives and timelines.</p>
+                </div>
+                <div class="card" onclick="openModalFromCard(this, 'Scope: Business Operations', 'Focus: Contracts & Finance')">
+                    <span class="icon">📈</span>
+                    <h3>Commercial Service</h3>
+                    <p>Oversees business operations related to sales, customer service, contracts, and financial discussions. Ensures smooth commercial processes, manages client relationships, and supports business growth through efficient contract execution.</p>
+                </div>
+                <div class="card" onclick="openModalFromCard(this, 'Scope: Execution', 'Focus: Delivery Lead')">
+                    <span class="icon">🔑</span>
+                    <h3>Delivery Owner</h3>
+                    <p>Key member responsible for overseeing and ensuring successful project delivery. Also known as the Project Lead or Coordinator, manages execution, aligns resources, tracks progress, and ensures objectives, timelines, and quality standards are met.</p>
+                </div>
+                <div class="card" onclick="openModalFromCard(this, 'Scope: Governance', 'Focus: Secondary Backup')">
+                    <span class="icon">🛡️</span>
+                    <h3>Delivery Oversight</h3>
+                    <p>Supports the Delivery Owner in ensuring successful project execution. Also known as the Secondary Delivery Owner, provides oversight, assists with deliverables, and steps in when the Delivery Owner is unavailable to maintain continuity.</p>
+                </div>
+                <div class="card" onclick="openModalFromCard(this, 'Scope: Technical', 'Focus: Dossier Preparation')">
+                    <span class="icon">🧬</span>
+                    <h3>Technical Members</h3>
+                    <p>Primarily responsible for executing project tasks related to review, preparation, submission, and problem-solving. Contribute expertise to ensure successful completion of deliverables.</p>
+                </div>
+                <div class="card" onclick="openModalFromCard(this, 'Scope: Financial', 'Focus: Invoice & Reconciliation')">
+                    <span class="icon">🪙</span>
+                    <h3>Accounts Receivable</h3>
+                    <p>Handles invoicing, reconciliations, payment receipts, credit notes, and related financial documentation. Ensures accounting issues are resolved promptly.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: ROLES & RESPONSIBILITIES -->
+        <div class="slide" id="slide-3" data-title="Accountabilities">
+            <div class="eyebrow">Delivery Directives</div>
+            <h2>PM &amp; Delivery Owner Responsibilities</h2>
+            <p class="slide-sub">Core accountabilities for seamless project execution.</p>
+
+            <div class="cards-grid">
+                <div class="card" onclick="openModalFromCard(this, 'Focus: Scope & Milestones')">
+                    <span class="icon">📢</span>
+                    <h3>Expectation &amp; Scope Mapping</h3>
+                    <p>Communicate client expectations, timelines, and define project deliverables or milestones as needed. Ensure project delivery aligns with the agreed-upon scope in the Statement of Work (SOW).</p>
+                </div>
+                <div class="card" onclick="openModalFromCard(this, 'Focus: Transparency')">
+                    <span class="icon">📊</span>
+                    <h3>Continuous Status Tracking</h3>
+                    <p>Regularly provide the client with project progress updates and reports. Deliver frequent status updates to ensure transparency and stakeholder confidence.</p>
+                </div>
+                <div class="card" onclick="openModalFromCard(this, 'Focus: Quality & Timeliness')">
+                    <span class="icon">🎯</span>
+                    <h3>Objective Realization</h3>
+                    <p>Ensure deliverables meet client expectations and project objectives. Oversee and manage tasks to meet deadlines and ensure smooth project progression.</p>
+                </div>
+            </div>
+
+            <div class="highlight-banner">
+                <strong>Core Summary:</strong> The Delivery Owner ensures seamless project execution by maintaining clear communication, accurate record-keeping, and timely reporting. They facilitate smooth collaboration, document key decisions, and provide regular updates to keep stakeholders informed, ultimately driving project success.
+            </div>
+        </div>
+
+        <!-- SLIDE 5: TEAM CONTACTS -->
+        <div class="slide" id="slide-4" data-title="Team Contacts">
+            <div class="eyebrow">Communication Tree</div>
+            <h2>Project Team Assignments</h2>
+            <p class="slide-sub">Direct contact pathways for each functional role in the India engagement.</p>
+
+            <div class="cards-grid">
+                <div class="card" onclick="openQuickModal('Project Manager / Delivery Owner', 'Primary contact for core program milestones, compliance pipelines, and day-to-day execution tracking.', '[Name]', 'pm@genedrift.com')">
+                    <span class="icon">👩‍💼</span>
+                    <h3>PM / Delivery Owner</h3>
+                    <p>[Name]</p>
+                    <span class="email-tag">[email], pm@genedrift.com</span>
+                </div>
+                <div class="card" onclick="openQuickModal('Commercial Service', 'Oversees commercial operations, contracts, and financial parameters for project deliverables.', '[Name]', 'cs@genedrift.com')">
+                    <span class="icon">👨‍💼</span>
+                    <h3>Commercial Service</h3>
+                    <p>[Name]</p>
+                    <span class="email-tag">[email], cs@genedrift.com</span>
+                </div>
+                <div class="card" onclick="openQuickModal('Accounts Receivable', 'Handles invoicing, payment reconciliation, credit notes, and financial documentation.', '[Name]', 'ar@genedrift.com')">
+                    <span class="icon">💳</span>
+                    <h3>Accounts Receivable</h3>
+                    <p>[Name]</p>
+                    <span class="email-tag">[email], ar@genedrift.com</span>
+                </div>
+                <div class="card" onclick="openQuickModal('Delivery Oversight', 'Provides strategic oversight and backup management for Delivery Owner.', '[Name]', 'pm@genedrift.com')">
+                    <span class="icon">👁️</span>
+                    <h3>Delivery Oversight</h3>
+                    <p>[Name]</p>
+                    <span class="email-tag">[email], pm@genedrift.com</span>
+                </div>
+                <div class="card" onclick="openQuickModal('Technical Members', 'Responsible for dossier review, preparation, submission, and query management.', '[Name(s)]', 'Regulatory Team')">
+                    <span class="icon">🔬</span>
+                    <h3>Technical Member(s)</h3>
+                    <p>[Name(s)]</p>
+                    <span class="email-tag">Regulatory execution specialists</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: PRODUCT SCOPE TABLE -->
+        <div class="slide" id="slide-5" data-title="Product Scope">
+            <div class="eyebrow">Pipeline Mapping</div>
+            <h2>Products / GMP Scope</h2>
+            <p class="slide-sub">Formal listing of projects and reference numbers for the India submission.</p>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product / GMP</th>
+                            <th>Country</th>
+                            <th>Project Reference No.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>GMP Site Clearance</strong></td>
+                            <td>India</td>
+                            <td><span class="table-badge">GMP-IND-2026-001</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Product Registration</strong></td>
+                            <td>India</td>
+                            <td><span class="table-badge">PR-IND-2026-001</span></td>
+                        </tr>
+                        <tr>
+                            <td><em>(Additional)</em></td>
+                            <td><em>TBD</em></td>
+                            <td><span class="table-badge">TBD</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: SCOPE DETAILS -->
+        <div class="slide" id="slide-6" data-title="Scope Details">
+            <div class="eyebrow">Execution Parameters</div>
+            <h2>Detailed Scope Boundaries</h2>
+            <p class="slide-sub">Granular breakdown of work packages for both tracks.</p>
+
+            <div class="cards-grid" style="grid-template-columns: 1fr 1fr;">
+                <div class="card" style="cursor: default; background: white;" onclick="event.stopPropagation()">
+                    <span class="icon">🏢</span>
+                    <h3 style="color: var(--teal); font-size: 24px; border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 12px;">GMP Clearance</h3>
+                    <ul style="list-style-type: none; font-size: 16.5px; color: var(--text-muted); display: flex; flex-direction: column; gap: 12px;">
+                        <li>⚙️ <strong>Review of Documents</strong> — Pre-submission audit of site master files and certifications.</li>
+                        <li>🏛️ <strong>Submission</strong> — Formal filing with Indian health authorities.</li>
+                        <li>💬 <strong>Query Management</strong> — Technical query resolution and follow-up.</li>
+                    </ul>
+                </div>
+                <div class="card" style="cursor: default; background: white;" onclick="event.stopPropagation()">
+                    <span class="icon">💊</span>
+                    <h3 style="color: var(--gold); font-size: 24px; border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 12px;">Product Registration</h3>
+                    <ul style="list-style-type: none; font-size: 16.5px; color: var(--text-muted); display: flex; flex-direction: column; gap: 12px;">
+                        <li>🔍 <strong>Gap Analysis</strong> — Dossier gap assessment against Indian regulatory standards.</li>
+                        <li>📂 <strong>Dossier Preparation</strong> — Module assembly per CDSCO requirements.</li>
+                        <li>🚀 <strong>Submission &amp; Query Management</strong> — Filing and authority query defense.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: WORKFLOW -->
+        <div class="slide" id="slide-7" data-title="Workflow">
+            <div class="eyebrow">Process Synchronization</div>
+            <h2>Operational Workflow</h2>
+            <p class="slide-sub">End-to-end process flow for the India project lifecycle.</p>
+
+            <div class="iframe-container">
+                <img src="https://download-accl.zoho.com/public/workdrive/download/q1kaadf3efe70c58f4cf19e2a0c21f439b684" alt="India Project Workflow Diagram" class="workflow-img" onerror="this.style.display='none'; this.parentNode.innerHTML='<div style=\'text-align:center; padding: 20px;\'><p style=\'font-size:18px; margin-bottom:10px;\'>🔗 Workflow diagram available at:</p><a href=\'https://download-accl.zoho.com/public/workdrive/download/q1kaadf3efe70c58f4cf19e2a0c21f439b684\' target=\'_blank\' style=\'color:var(--teal); font-weight:bold; text-decoration:underline;\'>Open Zoho Workdrive File ↗</a></div>'" />
+            </div>
+        </div>
+
+        <!-- SLIDE 9: THANK YOU -->
+        <div class="slide" id="slide-8" data-title="Thank You">
+            <div class="eyebrow">Session Adjourned</div>
+            <h1 style="font-size: 64px; text-align: center; margin-top: 40px;">THANK <span>YOU</span></h1>
+            <p class="slide-sub" style="text-align: center; margin: 0 auto 30px;">
+                Next steps, Q&amp;A, and alignment on milestone timelines.
+            </p>
+            <div style="display: flex; justify-content: center; gap: 20px; margin-top: 20px; flex-wrap: wrap;">
+                <div style="box-shadow: none; border: 2px solid var(--teal); background: var(--teal-light); color: var(--teal); font-weight: bold; padding: 10px 24px; border-radius: 10px;">
+                    ✅ Ready for Execution
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="keyboard-hint">Use ◄ and ► keys</div>
+    <div class="nav-arrows">
+        <button class="nav-btn" onclick="moveSlide(-1)">◄</button>
+        <button class="nav-btn" onclick="moveSlide(1)">►</button>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="detail-modal" onclick="closeModal(event)">
+        <div class="modal-card" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <h3 id="m-title">Title</h3>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, true)">✕</button>
+            </div>
+            <div class="modal-body">
+                <p id="m-desc">Description text.</p>
+                <div class="pop-meta-grid" id="m-meta"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div>© 2026 <a href="#" target="_blank">Genedrift</a>. All Rights Reserved.</div>
+        <div style="font-weight: bold; color: #b91c1c;">🔒 Confidential</div>
+        <div>Prepared by: Project Management Team</div>
+    </footer>
+
+    <script>
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        const progressFill = document.getElementById('progress-fill');
+        const progressLabel = document.getElementById('progress-label');
+        const progressStep = document.getElementById('progress-step');
+
+        function showSlide(index) {
+            if (index >= totalSlides) index = 0;
+            if (index < 0) index = totalSlides - 1;
+
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[index].classList.add('active');
+
+            currentSlideIndex = index;
+
+            const title = slides[index].getAttribute('data-title');
+            const pct = Math.round(((index + 1) / totalSlides) * 100);
+
+            progressFill.style.width = pct + '%';
+            progressLabel.textContent = title;
+            progressStep.textContent = (index + 1) + ' / ' + totalSlides;
+        }
+
+        function moveSlide(direction) {
+            closeModal(null, true);
+            showSlide(currentSlideIndex + direction);
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowLeft') moveSlide(-1);
+            else if (event.key === 'ArrowRight') moveSlide(1);
+            else if (event.key === 'Escape') closeModal(null, true);
+        });
+
+        // Modal elements
+        const modalOverlay = document.getElementById('detail-modal');
+        const mTitle = document.getElementById('m-title');
+        const mDesc = document.getElementById('m-desc');
+        const mMeta = document.getElementById('m-meta');
+
+        function openQuickModal(title, text, chip1, chip2) {
+            mTitle.textContent = title;
+            mDesc.textContent = text;
+            mMeta.innerHTML = '';
+            if (chip1) {
+                var c1 = document.createElement('div');
+                c1.className = 'pop-chip';
+                c1.textContent = chip1;
+                mMeta.appendChild(c1);
+            }
+            if (chip2) {
+                var c2 = document.createElement('div');
+                c2.className = 'pop-chip';
+                c2.textContent = chip2;
+                mMeta.appendChild(c2);
+            }
+            modalOverlay.classList.add('open');
+        }
+
+        function openModalFromCard(cardElement, forcedChip1, forcedChip2) {
+            var title = cardElement.querySelector('h3').textContent;
+            var text = cardElement.querySelector('p').textContent;
+            var c1 = forcedChip1 || 'Team Role';
+            var c2 = forcedChip2 || 'India Project';
+            openQuickModal(title, text, c1, c2);
+        }
+
+        function closeModal(event, force) {
+            if (force || (event && event.target === modalOverlay)) {
+                modalOverlay.classList.remove('open');
+            }
+        }
+
+        // Initialize
+        showSlide(0);
+    </script>
+
+</body>
+</html>
